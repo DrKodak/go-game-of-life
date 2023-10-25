@@ -1,8 +1,10 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
+	"text/template"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -38,6 +40,18 @@ func TimeLoggingMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+type Template struct {
+	templates *template.Template
+}
+
+func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	return t.templates.ExecuteTemplate(w, name, data)
+}
+
+func Hello(c echo.Context) error {
+	return c.Render(http.StatusOK, "hello", "World")
+}
+
 func main() {
 	e := echo.New()
 	e.Static("/static", "static")
@@ -45,6 +59,15 @@ func main() {
 	// Root level middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+
+	// Templates
+	t := &Template{
+		// for now do that but the docs say basically "templates/*.html"
+		templates: template.Must(template.ParseGlob("templates/hello.html")),
+	}
+	e.Renderer = t;
+
+	e.GET("/hello", Hello)
 
 	e.GET("/", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello life!")
