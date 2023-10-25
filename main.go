@@ -52,6 +52,10 @@ func Hello(c echo.Context) error {
 	return c.Render(http.StatusOK, "hello", "World")
 }
 
+func Index(c echo.Context) error {
+	return c.Render(http.StatusOK, "index", "index....")
+}
+
 func main() {
 	e := echo.New()
 	e.Static("/static", "static")
@@ -63,15 +67,16 @@ func main() {
 	// Templates
 	t := &Template{
 		// for now do that but the docs say basically "templates/*.html"
-		templates: template.Must(template.ParseGlob("templates/hello.html")),
+		templates: template.Must(template.ParseGlob("templates/*.html")),
 	}
 	e.Renderer = t;
 
 	e.GET("/hello", Hello)
+	e.GET("/", Index)
 
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello life!")
-	})
+	// e.GET("/", func(c echo.Context) error {
+	// 	return c.String(http.StatusOK, "Hello life!")
+	// })
 
 	e.POST("/clicked", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, `<p>You clicked me!</p>`)
