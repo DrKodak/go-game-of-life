@@ -1,3 +1,5 @@
 gameoflife
 main
 go-game-of-life
+tmp/
+.air.toml

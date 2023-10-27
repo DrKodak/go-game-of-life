@@ -11,25 +11,6 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-// func getUser(c echo.Context) error {
-// 	// User ID From path `users/:id`
-// 	id := c.Param("id")
-// 	return c.String(http.StatusOK, id)
-// }
-
-// func show(c echo.Context) error {
-// 	team := c.QueryParam("team")
-// 	member := c.QueryParam("member")
-// 	return c.String(http.StatusOK, "team: " + team + ", member: " + member)
-// }
-
-// func save(c echo.Context) error {
-// 	// get name and email
-// 	name := c.FormValue("name")
-// 	email := c.FormValue("email")
-// 	return c.String(http.StatusOK, "name: " + name + "email: " + email)
-// }
-
 func TimeLoggingMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
 		start := time.Now()
@@ -44,16 +25,41 @@ type Template struct {
 	templates *template.Template
 }
 
-func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+// TemplateRenderer is a custom html/template renderer for Echo
+type TemplateRenderer struct {
+	templates *template.Template
+}
+
+// Data needed for the grid structure
+type GridData struct {
+	Cols int
+	Cells []int
+}
+
+func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	// Add global methods if data is a map
+	if viewContext, isMap := data.(map[string]interface{}); isMap {
+		viewContext["reverse"] = c.Echo().Reverse;
+	}
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func Hello(c echo.Context) error {
-	return c.Render(http.StatusOK, "hello", "World")
+func Index(c echo.Context) error {
+	return c.Render(http.StatusOK, "index", "index ")
 }
 
-func Index(c echo.Context) error {
-	return c.Render(http.StatusOK, "index", "index....")
+func Foobar(c echo.Context) error {
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+		"name":"Dolly!",
+	})
+}
+
+func ColCount(c echo.Context) error {
+	data := GridData {
+		Cols: 10,
+		Cells: []int{1, 2, 3, 4, 5},
+	}
+	return c.Render(http.StatusOK, "index.html", data)
 }
 
 func main() {
@@ -62,31 +68,40 @@ func main() {
 
 	// Root level middleware
 	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
+	// e.Use(middleware.Recover())
 
 	// Templates
-	t := &Template{
-		// for now do that but the docs say basically "templates/*.html"
-		templates: template.Must(template.ParseGlob("templates/*.html")),
+	renderer := &TemplateRenderer{
+		templates: template.Must(template.ParseFiles("templates/index.html")),
 	}
-	e.Renderer = t;
+	e.Renderer = renderer
 
-	e.GET("/hello", Hello)
-	e.GET("/", Index)
+	e.GET("/", ColCount)
+	// e.GET("/", Index)
 
-	// e.GET("/", func(c echo.Context) error {
-	// 	return c.String(http.StatusOK, "Hello life!")
-	// })
+	e.POST("/pickle", func(c echo.Context) error {
+		return c.HTML(http.StatusOK, `<div
+        class="bg-white border border-gray-200"
+        hx-post="/notpickle"
+        hx-swap="outerHTML"
+      >
+        🫠
+      </div>`)
+	})
+
+	e.POST("/notpickle", func(c echo.Context) error {
+		return c.HTML(http.StatusOK, `<div
+        class="bg-white border border-gray-200"
+        hx-post="/pickle"
+        hx-swap="outerHTML"
+      >
+        🥒
+      </div>`)
+	})
 
 	e.POST("/clicked", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, `<p>You clicked me!</p>`)
 	})
-	// e.POST("/users", saveUser)
-	// e.GET("/users/:id", getUser)
-	// e.GET("/show", show)
-	// e.POST("/save", save)
-	// e.PUT("/users/:id", updateUser)
 
-	// e.DELETE("users/:id", deleteUser)
 	e.Logger.Fatal(e.Start(":1323"))
 }

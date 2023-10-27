@@ -1,8 +1,50 @@
-<script src="https://unpkg.com/htmx.org@1.9.4"></script>
-<link
-  href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-  rel="stylesheet"
-/>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>MY LIFE IS NOT A GAME</title>
+    <meta
+      name="description"
+      content="Conway's game of life but in go and htmx"
+    />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content=""width-device-width, initial-scale=1"
+    <meta name="keywords" content="HTML, HTMX, Go" />
+    <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<button hx-post="/clicked" hx-swap="outerHTML">Click Me!</button>
-<div>{{define "index"}}Hello, {{.}}!{{end}}</div>
+  <body>
+    <div
+      class="bg-gray-800 text-white hover:text-purple-500 p-4 justify-center"
+    >
+      Conway's Game of Life but in GO and HTMX
+    </div>
+    <div class="grid grid-cols-{{.Cols}} gap-1">
+      {{range .Cells}}
+      <div
+        class="bg-white border border-gray-200"
+        hx-post="/pickle"
+        hx-swap="outerHTML"
+      >
+        🥒
+      </div>
+      {{end}}
+    </div>
+    <button
+      class="bg-purple-600 text-white px-4 py-2 rounded shadow-md"
+      hx-post="/clicked"
+      hx-swap="outerHTML"
+    >
+      Click Me!
+    </button>
+
+    <!-- Footer  -->
+    <div class="bg-gray-800 text-white p-4 justify-center">
+      <p>Conway's Game of Life but in GO and HTMX</p>
+      <p>Made by DrKodak!</p>
+    </div>
+  </body>
+</html>
