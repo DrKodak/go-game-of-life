@@ -10,3 +10,4 @@ Each cell with three neighbors becomes populated.
 
 links:
 https://medium.com/gravel-engineering/this-blogpost-also-posted-in-my-personal-blog-which-you-can-access-here-dd856c61001
+https://echo.labstack.com/docs/templates

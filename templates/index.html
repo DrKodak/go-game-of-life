@@ -7,7 +7,7 @@
       content="Conway's game of life but in go and htmx"
     />
     <meta charset="UTF-8" />
-    <meta name="viewport" content=""width-device-width, initial-scale=1"
+    <meta name="viewport" content="width-device-width", initial-scale=1"/>
     <meta name="keywords" content="HTML, HTMX, Go" />
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
     <link
@@ -22,24 +22,17 @@
     >
       Conway's Game of Life but in GO and HTMX
     </div>
-    <div class="grid grid-cols-{{.Cols}} gap-1">
-      {{range .Cells}}
-      <div
-        class="bg-white border border-gray-200"
-        hx-post="/pickle"
-        hx-swap="outerHTML"
-      >
-        🥒
+    <div class="flex bg-gray-800 justify-center items-center min-h-screen">
+      <div class="grid grid-cols-12 gap-0.5">
+        {{range seq 144}}
+        <div
+          class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
+          hx-post="/pickle"
+          hx-swap="outerHTML"
+        ></div>
+        {{end}}
       </div>
-      {{end}}
     </div>
-    <button
-      class="bg-purple-600 text-white px-4 py-2 rounded shadow-md"
-      hx-post="/clicked"
-      hx-swap="outerHTML"
-    >
-      Click Me!
-    </button>
 
     <!-- Footer  -->
     <div class="bg-gray-800 text-white p-4 justify-center">

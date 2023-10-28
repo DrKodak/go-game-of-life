@@ -21,6 +21,15 @@ func TimeLoggingMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 	}
 }
 
+func seq(end int) []int {
+	var seq []int
+	start := 0
+	for i := start; i < end; i++ {
+		seq = append(seq, i)
+	}
+	return seq
+}
+
 type Template struct {
 	templates *template.Template
 }
@@ -33,7 +42,7 @@ type TemplateRenderer struct {
 // Data needed for the grid structure
 type GridData struct {
 	Cols int
-	Cells []int
+	CellCount int
 }
 
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
@@ -57,7 +66,7 @@ func Foobar(c echo.Context) error {
 func ColCount(c echo.Context) error {
 	data := GridData {
 		Cols: 10,
-		Cells: []int{1, 2, 3, 4, 5},
+		CellCount: 100,
 	}
 	return c.Render(http.StatusOK, "index.html", data)
 }
@@ -72,7 +81,9 @@ func main() {
 
 	// Templates
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseFiles("templates/index.html")),
+		templates: template.Must(template.New("index.html").Funcs(template.FuncMap{
+			"seq": seq,
+		}).ParseFiles("templates/index.html")),
 	}
 	e.Renderer = renderer
 
@@ -81,21 +92,20 @@ func main() {
 
 	e.POST("/pickle", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, `<div
-        class="bg-white border border-gray-200"
+        class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
         hx-post="/notpickle"
         hx-swap="outerHTML"
       >
-        🫠
+	  🥒
       </div>`)
 	})
 
-	e.POST("/notpickle", func(c echo.Context) error {
+	e.POST("/noPickle", func(c echo.Context) error {
 		return c.HTML(http.StatusOK, `<div
-        class="bg-white border border-gray-200"
+        class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
         hx-post="/pickle"
         hx-swap="outerHTML"
       >
-        🥒
       </div>`)
 	})
 
