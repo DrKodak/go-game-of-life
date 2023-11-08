@@ -49,5 +49,6 @@ func (gh *GameHandler) UpdateGame(c echo.Context) error {
 
 func (gh *GameHandler) RenderIndex(c echo.Context) error {
 	// If I wanted to add some special initial state I could through a call to the Renderer
-	return c.File("templates/index.html")
+	// return c.File("templates/index.html")
+	return c.Render(http.StatusOK, "index", nil)
 }
