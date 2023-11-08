@@ -1,3 +1,4 @@
+{{define "index"}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -7,7 +8,7 @@
       content="Conway's game of life but in go and htmx"
     />
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width-device-width", initial-scale=1"/>
+    <meta name="viewport" content="width-device-width" , initial-scale="1" />
     <meta name="keywords" content="HTML, HTMX, Go" />
     <script src="https://unpkg.com/htmx.org@1.9.4"></script>
     <link
@@ -24,11 +25,9 @@
     </div>
     <div class="flex bg-gray-800 justify-center items-center min-h-screen">
       <div class="grid grid-cols-12 gap-0.5">
-        {{range seq 144}}
+        {{range Sequence 144}}
         <div
           class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
-          hx-post="/pickle"
-          hx-swap="outerHTML"
         ></div>
         {{end}}
       </div>
@@ -41,3 +40,4 @@
     </div>
   </body>
 </html>
+{{end}}

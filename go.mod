@@ -1,4 +1,4 @@
-module gameoflife
+module github.com/DrKodak/go-game-of-life
 
 go 1.18
 
