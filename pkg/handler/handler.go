@@ -20,11 +20,14 @@ func NewGameHandler(gs *game.GameState) *GameHandler {
 }
 
 // Function to be called from the POST to pause the game
+// Needs to update server-side game state and update the button
 func (gh *GameHandler) PauseGame(c echo.Context) error {
 	gh.State.PauseGame()
 	return nil
 }
 
+// Function to be called from POST
+// Needs to update server-side game state by calling State's step function. Should this also call UpdateGame after?
 func (gh *GameHandler) StepGame(c echo.Context) error {
 	gh.State.Step()
 	return nil

@@ -29,6 +29,8 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 func main() {
 	e := echo.New()
 
+	e.Debug = true
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
@@ -42,10 +44,6 @@ func main() {
 			"Sequence": renderer.Seq,
 		}).ParseFiles("templates/index.html")),
 	}
-	// templateRenderer := &TemplateRenderer{
-	// 	templates: template.Must(
-	// 	template.ParseFiles("templates/index.html")),
-	// }
 	e.Renderer = templateRenderer
 
 	// Initialize the game
