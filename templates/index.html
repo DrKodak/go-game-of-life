@@ -23,13 +23,33 @@
     >
       Conway's Game of Life but in GO and HTMX
     </div>
-    <div class="flex bg-gray-800 justify-center items-center min-h-screen">
-      <div class="grid grid-cols-12 gap-0.5">
-        {{range Sequence 144}}
-        <div
-          class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
-        ></div>
-        {{end}}
+    <div class="grid grid-cols-5">
+      <div class="col-span-1">stats here</div>
+      <div
+        class="col-span-3 flex bg-gray-800 justify-center items-center min-h-screen"
+      >
+        <div class="grid grid-cols-12 gap-0.5">
+          {{range Sequence 144}}
+          <div
+            class="w-9 h-9 bg-gray-600 border border-gray-300 flex items-center justify-center"
+          ></div>
+          {{end}}
+        </div>
+      </div>
+      <div class="col-span-1">
+        <button
+          class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md"
+          hx-post="/pause-game"
+          hx-swap="outerHTML"
+        >
+          Pause ⏸️
+        </button>
+        <button class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md">
+          Step ⏭️
+        </button>
+        <button class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md">
+          Reset 🔄️
+        </button>
       </div>
     </div>
 

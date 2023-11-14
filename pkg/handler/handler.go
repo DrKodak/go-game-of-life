@@ -23,7 +23,16 @@ func NewGameHandler(gs *game.GameState) *GameHandler {
 // Needs to update server-side game state and update the button
 func (gh *GameHandler) PauseGame(c echo.Context) error {
 	gh.State.PauseGame()
-	return nil
+	return c.HTML(http.StatusOK, `<button
+	class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md" hx-post="/start-game"
+	hx-swap="outerHTML" >Start ▶️<button>`)
+}
+
+func (gh *GameHandler) StartGame(c echo.Context) error {
+	gh.State.StartGame()
+	return c.HTML(http.StatusOK, `<button
+	class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md" hx-post="/pause-game"
+	hx-swap="outerHTML" >Pause ⏸️<button>`)
 }
 
 // Function to be called from POST

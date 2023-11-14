@@ -55,6 +55,7 @@ func main() {
 	// Define all routes
 	e.GET("/", gh.RenderIndex)
 	e.POST("/pause-game", gh.PauseGame)
+	e.POST("/start-game", gh.StartGame)
 	e.POST("/step-game", gh.StepGame)
 
 	fmt.Printf("%#v\n", templateRenderer.templates)
