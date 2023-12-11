@@ -49,7 +49,7 @@ func (gh *GameHandler) StepGame(c echo.Context) error {
 func (gh *GameHandler) RandomizeGame(c echo.Context) error {
 	gh.State.RandomizeBoard()
 	renderer.PrintGameState(gh.State)
-	return nil
+	return c.HTML(http.StatusOK, ``)
 }
 
 func (gh *GameHandler) UpdateGame(c echo.Context) error {
