@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/DrKodak/go-game-of-life/pkg/game"
@@ -22,6 +23,7 @@ func NewGameHandler(gs *game.GameState) *GameHandler {
 // Function to be called from the POST to pause the game
 // Needs to update server-side game state and update the button
 func (gh *GameHandler) PauseGame(c echo.Context) error {
+	fmt.Print("hello I'm pausing")
 	gh.State.PauseGame()
 	return c.HTML(http.StatusOK, `<button
 	class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md" hx-post="/start-game"
@@ -29,6 +31,7 @@ func (gh *GameHandler) PauseGame(c echo.Context) error {
 }
 
 func (gh *GameHandler) StartGame(c echo.Context) error {
+	fmt.Print("hello I'm starting")
 	gh.State.StartGame()
 	return c.HTML(http.StatusOK, `<button
 	class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md" hx-post="/pause-game"
@@ -39,6 +42,13 @@ func (gh *GameHandler) StartGame(c echo.Context) error {
 // Needs to update server-side game state by calling State's step function. Should this also call UpdateGame after?
 func (gh *GameHandler) StepGame(c echo.Context) error {
 	gh.State.Step()
+	renderer.PrintGameState(gh.State)
+	return c.HTML(http.StatusOK, ``)
+}
+
+func (gh *GameHandler) RandomizeGame(c echo.Context) error {
+	gh.State.RandomizeBoard()
+	renderer.PrintGameState(gh.State)
 	return nil
 }
 

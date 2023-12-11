@@ -44,11 +44,20 @@
         >
           Pause ⏸️
         </button>
-        <button class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md">
+        <button
+          class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md"
+          hx-post="/step-game"
+        >
           Step ⏭️
         </button>
         <button class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md">
           Reset 🔄️
+        </button>
+        <button
+          class="bg-purple-600 text-gray px-4 py-2 rounded shadow-md"
+          hx-post="/randomize-game"
+        >
+          Randomize 🔀
         </button>
       </div>
     </div>

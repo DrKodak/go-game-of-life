@@ -48,6 +48,8 @@ func main() {
 
 	// Initialize the game
 	gs := game.NewGameState()
+	fmt.Println("Board: ", gs.TotalRows, gs.TotalCols)
+	fmt.Println(gs.Board)
 
 	// Set up the game state handler
 	gh := handler.NewGameHandler(gs)
@@ -57,6 +59,7 @@ func main() {
 	e.POST("/pause-game", gh.PauseGame)
 	e.POST("/start-game", gh.StartGame)
 	e.POST("/step-game", gh.StepGame)
+	e.POST("/randomize-game", gh.RandomizeGame)
 
 	fmt.Printf("%#v\n", templateRenderer.templates)
 	// Start Server
