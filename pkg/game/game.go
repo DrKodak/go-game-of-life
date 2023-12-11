@@ -1,10 +1,14 @@
 package game
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type GameState struct {
 	// [rows][cols]
 	Board [][] bool
+	NextBoard [][] bool
 	Running bool
 	TotalCols int
 	TotalRows int
@@ -22,6 +26,7 @@ func NewGameState() *GameState {
 	return &GameState{
 		// Initialization for game state
 		Board: a,
+		NextBoard: a,
 		Running: false,
 		TotalCols: cols,
 		TotalRows: rows,
@@ -36,7 +41,7 @@ func (g *GameState) countLiveNeighbors(curRow int, curCol int) int {
 			if r < 0 || c < 0 {
 				continue
 			}
-			if r > g.TotalRows || c > g.TotalCols {
+			if r >= g.TotalRows || c >= g.TotalCols {
 				continue
 			}
 			if g.Board[r][c] {
@@ -50,7 +55,34 @@ func (g *GameState) countLiveNeighbors(curRow int, curCol int) int {
 
 // Update game state
 func (g *GameState) Step() {
+	fmt.Print("hello I'm stepping\n")
 	// update logic
+	g.NextBoard = g.Board
+	for r:= 0; r < g.TotalRows; r++ {
+		for c:= 0; c < g.TotalCols; c++ {
+			count := g.countLiveNeighbors(r, c)
+			if count > 0 {
+				if g.Board[r][c] {
+					// if count < 2, dies
+					if count < 2 {
+						g.NextBoard[r][c] = false	
+					}
+					// if count > 3, dies
+					if count > 3 {
+						g.NextBoard[r][c] = false	
+					}
+				} else {
+					// if dead and count > 3, cell lives
+					if count > 3 {
+						g.NextBoard[r][c] = true
+					}
+				}
+			} // if count > 0
+		} // end for cols
+	} // end for rows
+	// Updates the actual Board
+	fmt.Print("done doing the stepping\n")
+	g.Board = g.NextBoard
 }
 
 func (g *GameState) IsRunning() bool {
@@ -65,4 +97,17 @@ func (g *GameState) StartGame() {
 func (g *GameState) PauseGame() {
     g.Running = false
 	fmt.Println("hello I'm pausing now")
+}
+
+func randomBool() bool {
+	return rand.Float32() < 0.5
+}
+
+func (g *GameState) RandomizeBoard() {
+	fmt.Print("randomizing\n")
+	for r:= 0; r < g.TotalRows; r++ {
+		for c:= 0; c < g.TotalCols; c++ {
+			g.Board[r][c] = randomBool()
+		}
+	}
 }
